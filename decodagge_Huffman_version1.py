@@ -120,12 +120,12 @@ def code_huffman_sous_section(dict, noeuds, code):
         dict[noeuds] = code
     else:
         print(noeuds.label, "                  ", noeuds.frequence, "fils droit : ", noeuds.getfils_droit().label," ", noeuds.getfils_droit().frequence,"\n fils gauche : ", noeuds.getfils_gauche().label," ",noeuds.getfils_gauche().frequence, "\n")
-        code_huffman_sous_section(dict, noeuds.getfils_droit(), code +'1')
-        code_huffman_sous_section(dict, noeuds.getfils_gauche(), code + '0')
+        code_huffman_sous_section(dict, noeuds.getfils_droit(), code +'0')
+        code_huffman_sous_section(dict, noeuds.getfils_gauche(), code + '1')
 
 
 def determine_code_bin():
-    f = open('D:\IDU\PROJ631-algorithmique\donnees\exemple_comp.bin', "rb")
+    f = open('D:\IDU\PROJ631-algorithmique\Projet_Algorithmique\donnees\exemple_comp.bin', "rb")
     num = list(f.read())
     f.close()
     binaire = ""
@@ -136,30 +136,31 @@ def determine_code_bin():
         binaire += bin_tamp[2:n]
     return binaire
 
-def nbre_moyen(code_bin):
-    nbre_caract = nbre_caract()
-    moyenne = len(code_bin)/nbre_caract
-    return moyenne
+def nbre_moyen():
+    code_bin=determine_code_bin()
+    nbr_caract = nbre_caract()
+    moyenne = len(code_bin)/nbr_caract
+    print(moyenne)
 
     
 
 def nbre_caract():
-    with open(r"D:\IDU\PROJ631-algorithmique\donnees\exemple_freq.txt",'r') as file :
+    with open(r"D:\IDU\PROJ631-algorithmique\Projet_Algorithmique\donnees\exemple_freq.txt",'r') as file :
         content = file.readlines()
     file.close()
     somme=0
     for i in range(1,len(content)):
         a=content[i]
-        somme += a[2:len(a)]
+        somme += int(a[2:len(a)])
     return somme
 
 
-
-def calcule_compression(code_binaire):
+def calcule_compression():
+    code_binaire = determine_code_bin
     #on parcours le fichier frequence et on calcule le volume du nombre de caractère par son volume 
     #et on mesure la longueur du code binaire et on le multiplie par le nombre de fois où on le retrouve dans le fichier binaire
     # open the file using open() function
-    with open(r"D:\IDU\PROJ631-algorithmique\donnees\exemple_freq.txt",'r') as file :
+    with open(r"D:\IDU\PROJ631-algorithmique\Projet_Algorithmique\donnees\exemple_freq.txt",'r') as file :
         content = file.readlines()
     file.close()
     taille_chiffre = 0
@@ -172,17 +173,58 @@ def calcule_compression(code_binaire):
     nbre_lettre = int(content[0])
     volume_fin = len(code_binaire) + taille_chiffre + nbre_lettre *8
     gain = 1 - volume_fin/volume_init
-    return gain
+    print(gain)
 
 
 
    
 
+def mets_dans_dict():
+    with open(r"D:\IDU\PROJ631-algorithmique\Projet_Algorithmique\donnees\exemple_freq.txt",'r') as file :
+        content = file.readlines()
+    file.close()  
 
+    dict={}
+    for i in range(1,len(content)):
+        dict[content[i][0]] = int(content[i][2:len(content[i])])
+    
+    return dict
 
+def main():
+        
+        dictionnaire = mets_dans_dict()
+        code_bin = determine_code_bin()
+        #print(code_bin)
+        #calcule_compression(code_bin)
 
+        nouriture =[]
+        
+        L = transform(dictionnaire)
+        #print(L[len(L)-1].label)
+        racine = determine_racine(L)
+        dict_code = code_huffman(racine)
+        for (k,v) in dict_code.items():
+            print("lettre : ", k.label," code :", v,"\n")
+        print(dict_code)
+        resultat=""
+        tampon=""
+        for a in code_bin:
+            tampon+=a
+            nouriture.append(tampon)
+            print(nouriture)
+            #on cherche le code similaire à ce que l'on a et on le remplace par le caractère que l'on veut
+            for (noeuds,code) in dict_code.items():
+                if tampon == code:
+                    resultat+=noeuds.label
+                    nouriture.append(noeuds.label)
+                    tampon=""
+
+        print(resultat)
     
 if __name__ == '__main__':
+    main()
+    nbre_moyen()
+    '''
 
 #prenons par exemple le dictionnaire suivant
     dictionnaire = { 'b': 1, 'j': 1, 'n': 1, 'r': 1, 'u': 1,'!': 2, 'o': 2 }
@@ -192,13 +234,12 @@ if __name__ == '__main__':
     #même chose pour le code binaire du fichier compresser
 
     
-    print(bin(23))
     code_bin = determine_code_bin()
     print(code_bin)
     calcule_compression(code_bin)
 
     nouriture =[]
-    '''
+    
     L = transform(dictionnaire)
     print(L[len(L)-1].label)
     racine = determine_racine(L)
