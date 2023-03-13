@@ -156,7 +156,7 @@ def nbre_caract():
 
 
 def calcule_compression():
-    code_binaire = determine_code_bin
+    code_binaire = determine_code_bin()
     #on parcours le fichier frequence et on calcule le volume du nombre de caractère par son volume 
     #et on mesure la longueur du code binaire et on le multiplie par le nombre de fois où on le retrouve dans le fichier binaire
     # open the file using open() function
@@ -171,7 +171,8 @@ def calcule_compression():
     print(somme)
     volume_init = somme * 8
     nbre_lettre = int(content[0])
-    volume_fin = len(code_binaire) + taille_chiffre + nbre_lettre *8
+    print(nbre_lettre)
+    volume_fin = len(code_binaire) + nbre_lettre *8
     gain = 1 - volume_fin/volume_init
     print(gain)
 
@@ -218,52 +219,16 @@ def main():
                     resultat+=noeuds.label
                     nouriture.append(noeuds.label)
                     tampon=""
+        file = open("fichier_decompresser.txt", "w")
+        file.write(resultat)
+        file.close()
 
-        print(resultat)
     
 if __name__ == '__main__':
     main()
     nbre_moyen()
-    '''
+    calcule_compression()
 
-#prenons par exemple le dictionnaire suivant
-    dictionnaire = { 'b': 1, 'j': 1, 'n': 1, 'r': 1, 'u': 1,'!': 2, 'o': 2 }
-    #dictionnaire = { 'W' : 1 ,'a': 1, 'd': 1, 'e': 1, 'k': 1, 'p': 1, 'i': 3}
-    code_binaire=""
-    #il faudra ouvrir le fichier des fréquences et crée le fictionnaire
-    #même chose pour le code binaire du fichier compresser
-
-    
-    code_bin = determine_code_bin()
-    print(code_bin)
-    calcule_compression(code_bin)
-
-    nouriture =[]
-    
-    L = transform(dictionnaire)
-    print(L[len(L)-1].label)
-    racine = determine_racine(L)
-    dict_code = code_huffman(racine)
-    for (k,v) in dict_code.items():
-        print("lettre : ", k.label," code :", v,"\n")
-    print(dict_code)
-    resultat=""
-    tampon=""
-    for a in code_bin:
-        tampon+=a
-        nouriture.append(tampon)
-        print(nouriture)
-        #on cherche le code similaire à ce que l'on a et on le remplace par le caractère que l'on veut
-        for (noeuds,code) in dict_code.items():
-            if tampon == code:
-                resultat+=noeuds.label
-                nouriture.append(noeuds.label)
-                tampon=""
-
-    print(resultat)
-    # on peut réécrire dans un fichier le résultat mais il faut faire le test avant.
-
-'''
 
 
 
