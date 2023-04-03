@@ -66,7 +66,7 @@ void Parcours_en_profondeur(Node* noeuds , string chaine, map<string,string>& di
 
 map<string,string> code_bin(Node racine){
     map<string,string> dict_codes;
-    Parcours_en_profondeur(racine, "",dict_codes);
+    Parcours_en_profondeur(&racine, "",dict_codes);
     return dict_codes;
 }
 
@@ -167,15 +167,16 @@ string creation_code_fin(string* content,map<string,string> dict_code){
 
 int main(){
     string content = lecture_file();
-    map<string, int> dict= compt_caracts(content);
+    map<string, int> dict= compt_caracts(&content);
     vector<Node> liste_noeuds = liste_feuille(dict);
-    Node racine =construct_arbre(liste_noeuds);
+    Node racine =construct_arbre(&liste_noeuds);
     map<string,string> dict_code = code_bin(racine);
-    string code_fin = creation_code_fin(content, dict_code);
+    string code_fin = creation_code_fin(&content, dict_code);
     float gain = deter_gain(code_fin.size(),content.size());
     float moyenne = taille_moyenne(code_fin.size(),content.size());
     cout<<"le gain de la compression est de"<< gain<<endl;
     cout<<"la taille moyenne d'un caractère est de "<<moyenne<< " bits"<<endl;
+    cout<<"code_finale"<< code_fin<<endl;
 
     // pour le moment on va supposer que la fonction de trie fonctionne
     // idée trier un dictionnaire semble impossive va rester trier par clé et refuse de bouger
